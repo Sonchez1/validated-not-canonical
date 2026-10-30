@@ -1,0 +1,34 @@
+# Coordinated-disclosure material stays private until maintainers respond
+# or 90 days pass. Never commit these.
+reports/
+TRACKER.md
+exhibits/
+
+# Toolchain state
+.venv*/
+__pycache__/
+*.pyc
+node_modules/
+package-lock.json
+target/
+Cargo.lock
+vendor/
+composer.lock
+.bundle/
+Gemfile.lock
+harness/java/target/
+harness/java/lib/
+harness/go/bin/
+*.class
+
+# Paper build products
+paper/*.aux
+paper/*.log
+paper/*.bbl
+paper/*.blg
+paper/*.out
+paper/*.toc
+paper/*.fls
+paper/*.fdb_latexmk
+
+.DS_Store

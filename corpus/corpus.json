@@ -1,0 +1,4396 @@
+{
+ "name": "validated-not-canonical corpus",
+ "version": "1.0.0",
+ "canonical_definition": "UTS #46 ToASCII, Transitional_Processing=false, CheckHyphens=true, CheckBidi=true, CheckJoiners=true, UseSTD3ASCIIRules=true, VerifyDnsLength=true",
+ "canonical_engine": "icu-79.1-unicode-18.0",
+ "whatwg_engine": "node v22.12.0 url.domainToASCII",
+ "unicode_data": {
+  "IdnaMappingTable.txt": "18.0.0",
+  "confusables.txt": "18.0.0"
+ },
+ "python": "3.13.12",
+ "counts": {
+  "cases": 158,
+  "by_class": {
+   "control": 12,
+   "invisible": 62,
+   "confusable": 33,
+   "idna": 51
+  }
+ },
+ "cases": [
+  {
+   "id": "ctl-good",
+   "class": "control",
+   "subclass": "known-good",
+   "host": "example.com",
+   "note": "known-good host; every harness must accept",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.com/path?q=1",
+   "email": "user@example.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "exarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "ctl-good-sub",
+   "class": "control",
+   "subclass": "known-good",
+   "host": "www.example.com",
+   "note": "known-good host with subdomain",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://www.example.com/path?q=1",
+   "email": "user@www.example.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "www.exarnple.corn",
+   "canonical": "www.example.com",
+   "idna2008": "www.example.com",
+   "idna2003": "www.example.com",
+   "whatwg": "www.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "ctl-good-idn",
+   "class": "control",
+   "subclass": "known-good",
+   "host": "b\u00fccher.example",
+   "note": "valid IDN label (u-umlaut); canonical is the A-label",
+   "looks_like": "bucher.example",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://b\u00fccher.example/path?q=1",
+   "email": "user@b\u00fccher.example",
+   "codepoints": [
+    "U+00FC"
+   ],
+   "uts46_status": [
+    "U+00FC:valid"
+   ],
+   "skeleton": "bu\u0308cher.exarnple",
+   "canonical": "xn--bcher-kva.example",
+   "idna2008": "xn--bcher-kva.example",
+   "idna2003": "xn--bcher-kva.example",
+   "whatwg": "xn--bcher-kva.example",
+   "expected": "accept"
+  },
+  {
+   "id": "ctl-good-alabel",
+   "class": "control",
+   "subclass": "known-good",
+   "host": "xn--bcher-kva.example",
+   "note": "valid A-label for the previous case",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://xn--bcher-kva.example/path?q=1",
+   "email": "user@xn--bcher-kva.example",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "xn--bcher-kva.exarnple",
+   "canonical": "xn--bcher-kva.example",
+   "idna2008": "xn--bcher-kva.example",
+   "idna2003": "xn--bcher-kva.example",
+   "whatwg": "xn--bcher-kva.example",
+   "expected": "accept"
+  },
+  {
+   "id": "ctl-bad-space",
+   "class": "control",
+   "subclass": "known-bad",
+   "host": "exa mple.com",
+   "note": "known-bad host (interior space); every harness must reject",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exa mple.com/path?q=1",
+   "email": "user@exa mple.com",
+   "codepoints": [
+    "U+0020"
+   ],
+   "uts46_status": [
+    "U+0020:valid"
+   ],
+   "skeleton": "exa rnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "exa mple.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "ctl-bad-at",
+   "class": "control",
+   "subclass": "known-bad",
+   "host": "exa@mple.com",
+   "note": "known-bad host (interior @); e-mail surface becomes user@exa@mple.com",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exa@mple.com/path?q=1",
+   "email": "user@exa@mple.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "exa@rnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "exa@mple.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "ctl-single-label",
+   "class": "control",
+   "subclass": "single-label",
+   "host": "localhost",
+   "note": "single label: valid DNS name, but most validators require a dot",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": true,
+   "url": "https://localhost/path?q=1",
+   "email": "user@localhost",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "localhost",
+   "canonical": "localhost",
+   "idna2008": "localhost",
+   "idna2003": "localhost",
+   "whatwg": "localhost",
+   "expected": "accept"
+  },
+  {
+   "id": "ctl-upper",
+   "class": "control",
+   "subclass": "case",
+   "host": "EXAMPLE.COM",
+   "note": "upper-case ASCII; canonical is lower-case; DNS is case-insensitive",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": true,
+   "url": "https://EXAMPLE.COM/path?q=1",
+   "email": "user@EXAMPLE.COM",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "EXAMPLE.COM",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "EXAMPLE.COM",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "ctl-mixed-case",
+   "class": "control",
+   "subclass": "case",
+   "host": "Example.Com",
+   "note": "mixed-case ASCII",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": true,
+   "url": "https://Example.Com/path?q=1",
+   "email": "user@Example.Com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "Exarnple.Corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "Example.Com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "ctl-digit-1",
+   "class": "control",
+   "subclass": "ascii-confusable",
+   "host": "examp1e.com",
+   "note": "ASCII digit 1 for l; valid and canonical; acceptance is correct",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://examp1e.com/path?q=1",
+   "email": "user@examp1e.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "exarnple.corn",
+   "canonical": "examp1e.com",
+   "idna2008": "examp1e.com",
+   "idna2003": "examp1e.com",
+   "whatwg": "examp1e.com",
+   "expected": "accept"
+  },
+  {
+   "id": "ctl-digit-0",
+   "class": "control",
+   "subclass": "ascii-confusable",
+   "host": "examp1e.c0m",
+   "note": "ASCII digit 0 for o; valid and canonical",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://examp1e.c0m/path?q=1",
+   "email": "user@examp1e.c0m",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "exarnple.cOrn",
+   "canonical": "examp1e.c0m",
+   "idna2008": "examp1e.c0m",
+   "idna2003": "examp1e.c0m",
+   "whatwg": "examp1e.c0m",
+   "expected": "accept"
+  },
+  {
+   "id": "ctl-rn",
+   "class": "control",
+   "subclass": "ascii-confusable",
+   "host": "exarnple.com",
+   "note": "rn for m; valid and canonical",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exarnple.com/path?q=1",
+   "email": "user@exarnple.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "exarnple.corn",
+   "canonical": "exarnple.com",
+   "idna2008": "exarnple.com",
+   "idna2003": "exarnple.com",
+   "whatwg": "exarnple.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-00AD-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u00adple.com",
+   "note": "U+00AD SOFT HYPHEN (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u00adple.com/path?q=1",
+   "email": "user@exam\u00adple.com",
+   "codepoints": [
+    "U+00AD"
+   ],
+   "uts46_status": [
+    "U+00AD:ignored"
+   ],
+   "skeleton": "exarn\u00adple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-00AD-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u00adexample.com",
+   "note": "U+00AD SOFT HYPHEN (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u00adexample.com/path?q=1",
+   "email": "user@\u00adexample.com",
+   "codepoints": [
+    "U+00AD"
+   ],
+   "uts46_status": [
+    "U+00AD:ignored"
+   ],
+   "skeleton": "\u00adexarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-00AD-end",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "example\u00ad.com",
+   "note": "U+00AD SOFT HYPHEN (ignored in UTS 46) at label end",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example\u00ad.com/path?q=1",
+   "email": "user@example\u00ad.com",
+   "codepoints": [
+    "U+00AD"
+   ],
+   "uts46_status": [
+    "U+00AD:ignored"
+   ],
+   "skeleton": "exarnple\u00ad.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-00AD-tld",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "example.c\u00adom",
+   "note": "U+00AD SOFT HYPHEN (ignored in UTS 46) at label tld",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.c\u00adom/path?q=1",
+   "email": "user@example.c\u00adom",
+   "codepoints": [
+    "U+00AD"
+   ],
+   "uts46_status": [
+    "U+00AD:ignored"
+   ],
+   "skeleton": "exarnple.c\u00adorn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-200B-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u200bple.com",
+   "note": "U+200B ZERO WIDTH SPACE (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u200bple.com/path?q=1",
+   "email": "user@exam\u200bple.com",
+   "codepoints": [
+    "U+200B"
+   ],
+   "uts46_status": [
+    "U+200B:ignored"
+   ],
+   "skeleton": "exarn\u200bple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-200B-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u200bexample.com",
+   "note": "U+200B ZERO WIDTH SPACE (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u200bexample.com/path?q=1",
+   "email": "user@\u200bexample.com",
+   "codepoints": [
+    "U+200B"
+   ],
+   "uts46_status": [
+    "U+200B:ignored"
+   ],
+   "skeleton": "\u200bexarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-200B-end",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "example\u200b.com",
+   "note": "U+200B ZERO WIDTH SPACE (ignored in UTS 46) at label end",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example\u200b.com/path?q=1",
+   "email": "user@example\u200b.com",
+   "codepoints": [
+    "U+200B"
+   ],
+   "uts46_status": [
+    "U+200B:ignored"
+   ],
+   "skeleton": "exarnple\u200b.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-200B-tld",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "example.c\u200bom",
+   "note": "U+200B ZERO WIDTH SPACE (ignored in UTS 46) at label tld",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.c\u200bom/path?q=1",
+   "email": "user@example.c\u200bom",
+   "codepoints": [
+    "U+200B"
+   ],
+   "uts46_status": [
+    "U+200B:ignored"
+   ],
+   "skeleton": "exarnple.c\u200born",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-200C-mid",
+   "class": "invisible",
+   "subclass": "deviation",
+   "host": "exam\u200cple.com",
+   "note": "U+200C ZERO WIDTH NON-JOINER (deviation in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u200cple.com/path?q=1",
+   "email": "user@exam\u200cple.com",
+   "codepoints": [
+    "U+200C"
+   ],
+   "uts46_status": [
+    "U+200C:deviation"
+   ],
+   "skeleton": "exarn\u200cple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "example.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-200C-start",
+   "class": "invisible",
+   "subclass": "deviation",
+   "host": "\u200cexample.com",
+   "note": "U+200C ZERO WIDTH NON-JOINER (deviation in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u200cexample.com/path?q=1",
+   "email": "user@\u200cexample.com",
+   "codepoints": [
+    "U+200C"
+   ],
+   "uts46_status": [
+    "U+200C:deviation"
+   ],
+   "skeleton": "\u200cexarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "example.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-200D-mid",
+   "class": "invisible",
+   "subclass": "deviation",
+   "host": "exam\u200dple.com",
+   "note": "U+200D ZERO WIDTH JOINER (deviation in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u200dple.com/path?q=1",
+   "email": "user@exam\u200dple.com",
+   "codepoints": [
+    "U+200D"
+   ],
+   "uts46_status": [
+    "U+200D:deviation"
+   ],
+   "skeleton": "exarn\u200dple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "example.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-200D-start",
+   "class": "invisible",
+   "subclass": "deviation",
+   "host": "\u200dexample.com",
+   "note": "U+200D ZERO WIDTH JOINER (deviation in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u200dexample.com/path?q=1",
+   "email": "user@\u200dexample.com",
+   "codepoints": [
+    "U+200D"
+   ],
+   "uts46_status": [
+    "U+200D:deviation"
+   ],
+   "skeleton": "\u200dexarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "example.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-200D-end",
+   "class": "invisible",
+   "subclass": "deviation",
+   "host": "example\u200d.com",
+   "note": "U+200D ZERO WIDTH JOINER (deviation in UTS 46) at label end",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example\u200d.com/path?q=1",
+   "email": "user@example\u200d.com",
+   "codepoints": [
+    "U+200D"
+   ],
+   "uts46_status": [
+    "U+200D:deviation"
+   ],
+   "skeleton": "exarnple\u200d.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "example.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-200D-tld",
+   "class": "invisible",
+   "subclass": "deviation",
+   "host": "example.c\u200dom",
+   "note": "U+200D ZERO WIDTH JOINER (deviation in UTS 46) at label tld",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.c\u200dom/path?q=1",
+   "email": "user@example.c\u200dom",
+   "codepoints": [
+    "U+200D"
+   ],
+   "uts46_status": [
+    "U+200D:deviation"
+   ],
+   "skeleton": "exarnple.c\u200dorn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "example.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-2060-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u2060ple.com",
+   "note": "U+2060 WORD JOINER (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u2060ple.com/path?q=1",
+   "email": "user@exam\u2060ple.com",
+   "codepoints": [
+    "U+2060"
+   ],
+   "uts46_status": [
+    "U+2060:ignored"
+   ],
+   "skeleton": "exarn\u2060ple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-2060-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u2060example.com",
+   "note": "U+2060 WORD JOINER (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u2060example.com/path?q=1",
+   "email": "user@\u2060example.com",
+   "codepoints": [
+    "U+2060"
+   ],
+   "uts46_status": [
+    "U+2060:ignored"
+   ],
+   "skeleton": "\u2060exarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-2060-end",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "example\u2060.com",
+   "note": "U+2060 WORD JOINER (ignored in UTS 46) at label end",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example\u2060.com/path?q=1",
+   "email": "user@example\u2060.com",
+   "codepoints": [
+    "U+2060"
+   ],
+   "uts46_status": [
+    "U+2060:ignored"
+   ],
+   "skeleton": "exarnple\u2060.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-2060-tld",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "example.c\u2060om",
+   "note": "U+2060 WORD JOINER (ignored in UTS 46) at label tld",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.c\u2060om/path?q=1",
+   "email": "user@example.c\u2060om",
+   "codepoints": [
+    "U+2060"
+   ],
+   "uts46_status": [
+    "U+2060:ignored"
+   ],
+   "skeleton": "exarnple.c\u2060orn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-FEFF-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\ufeffple.com",
+   "note": "U+FEFF ZERO WIDTH NO-BREAK SPACE (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\ufeffple.com/path?q=1",
+   "email": "user@exam\ufeffple.com",
+   "codepoints": [
+    "U+FEFF"
+   ],
+   "uts46_status": [
+    "U+FEFF:ignored"
+   ],
+   "skeleton": "exarn\ufeffple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-FEFF-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\ufeffexample.com",
+   "note": "U+FEFF ZERO WIDTH NO-BREAK SPACE (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\ufeffexample.com/path?q=1",
+   "email": "user@\ufeffexample.com",
+   "codepoints": [
+    "U+FEFF"
+   ],
+   "uts46_status": [
+    "U+FEFF:ignored"
+   ],
+   "skeleton": "\ufeffexarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-FEFF-end",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "example\ufeff.com",
+   "note": "U+FEFF ZERO WIDTH NO-BREAK SPACE (ignored in UTS 46) at label end",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example\ufeff.com/path?q=1",
+   "email": "user@example\ufeff.com",
+   "codepoints": [
+    "U+FEFF"
+   ],
+   "uts46_status": [
+    "U+FEFF:ignored"
+   ],
+   "skeleton": "exarnple\ufeff.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-FEFF-tld",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "example.c\ufeffom",
+   "note": "U+FEFF ZERO WIDTH NO-BREAK SPACE (ignored in UTS 46) at label tld",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.c\ufeffom/path?q=1",
+   "email": "user@example.c\ufeffom",
+   "codepoints": [
+    "U+FEFF"
+   ],
+   "uts46_status": [
+    "U+FEFF:ignored"
+   ],
+   "skeleton": "exarnple.c\ufefforn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-034F-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u034fple.com",
+   "note": "U+034F COMBINING GRAPHEME JOINER (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u034fple.com/path?q=1",
+   "email": "user@exam\u034fple.com",
+   "codepoints": [
+    "U+034F"
+   ],
+   "uts46_status": [
+    "U+034F:ignored"
+   ],
+   "skeleton": "exarn\u034fple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-034F-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u034fexample.com",
+   "note": "U+034F COMBINING GRAPHEME JOINER (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u034fexample.com/path?q=1",
+   "email": "user@\u034fexample.com",
+   "codepoints": [
+    "U+034F"
+   ],
+   "uts46_status": [
+    "U+034F:ignored"
+   ],
+   "skeleton": "\u034fexarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-061C-mid",
+   "class": "invisible",
+   "subclass": "disallowed",
+   "host": "exam\u061cple.com",
+   "note": "U+061C ARABIC LETTER MARK (disallowed in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u061cple.com/path?q=1",
+   "email": "user@exam\u061cple.com",
+   "codepoints": [
+    "U+061C"
+   ],
+   "uts46_status": [
+    "U+061C:disallowed"
+   ],
+   "skeleton": "exarn\u061cple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "xn--example-mnj.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-061C-start",
+   "class": "invisible",
+   "subclass": "disallowed",
+   "host": "\u061cexample.com",
+   "note": "U+061C ARABIC LETTER MARK (disallowed in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u061cexample.com/path?q=1",
+   "email": "user@\u061cexample.com",
+   "codepoints": [
+    "U+061C"
+   ],
+   "uts46_status": [
+    "U+061C:disallowed"
+   ],
+   "skeleton": "\u061cexarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "xn--example-inj.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-180E-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u180eple.com",
+   "note": "U+180E MONGOLIAN VOWEL SEPARATOR (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u180eple.com/path?q=1",
+   "email": "user@exam\u180eple.com",
+   "codepoints": [
+    "U+180E"
+   ],
+   "uts46_status": [
+    "U+180E:ignored"
+   ],
+   "skeleton": "exarn\u180eple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-180E-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u180eexample.com",
+   "note": "U+180E MONGOLIAN VOWEL SEPARATOR (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u180eexample.com/path?q=1",
+   "email": "user@\u180eexample.com",
+   "codepoints": [
+    "U+180E"
+   ],
+   "uts46_status": [
+    "U+180E:ignored"
+   ],
+   "skeleton": "\u180eexarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-2061-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u2061ple.com",
+   "note": "U+2061 FUNCTION APPLICATION (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u2061ple.com/path?q=1",
+   "email": "user@exam\u2061ple.com",
+   "codepoints": [
+    "U+2061"
+   ],
+   "uts46_status": [
+    "U+2061:ignored"
+   ],
+   "skeleton": "exarn\u2061ple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-2061-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u2061example.com",
+   "note": "U+2061 FUNCTION APPLICATION (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u2061example.com/path?q=1",
+   "email": "user@\u2061example.com",
+   "codepoints": [
+    "U+2061"
+   ],
+   "uts46_status": [
+    "U+2061:ignored"
+   ],
+   "skeleton": "\u2061exarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-2062-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u2062ple.com",
+   "note": "U+2062 INVISIBLE TIMES (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u2062ple.com/path?q=1",
+   "email": "user@exam\u2062ple.com",
+   "codepoints": [
+    "U+2062"
+   ],
+   "uts46_status": [
+    "U+2062:ignored"
+   ],
+   "skeleton": "exarn\u2062ple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-2062-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u2062example.com",
+   "note": "U+2062 INVISIBLE TIMES (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u2062example.com/path?q=1",
+   "email": "user@\u2062example.com",
+   "codepoints": [
+    "U+2062"
+   ],
+   "uts46_status": [
+    "U+2062:ignored"
+   ],
+   "skeleton": "\u2062exarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-2063-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u2063ple.com",
+   "note": "U+2063 INVISIBLE SEPARATOR (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u2063ple.com/path?q=1",
+   "email": "user@exam\u2063ple.com",
+   "codepoints": [
+    "U+2063"
+   ],
+   "uts46_status": [
+    "U+2063:ignored"
+   ],
+   "skeleton": "exarn\u2063ple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-2063-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u2063example.com",
+   "note": "U+2063 INVISIBLE SEPARATOR (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u2063example.com/path?q=1",
+   "email": "user@\u2063example.com",
+   "codepoints": [
+    "U+2063"
+   ],
+   "uts46_status": [
+    "U+2063:ignored"
+   ],
+   "skeleton": "\u2063exarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-2064-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u2064ple.com",
+   "note": "U+2064 INVISIBLE PLUS (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u2064ple.com/path?q=1",
+   "email": "user@exam\u2064ple.com",
+   "codepoints": [
+    "U+2064"
+   ],
+   "uts46_status": [
+    "U+2064:ignored"
+   ],
+   "skeleton": "exarn\u2064ple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "xn--example-gl7c.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-2064-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u2064example.com",
+   "note": "U+2064 INVISIBLE PLUS (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u2064example.com/path?q=1",
+   "email": "user@\u2064example.com",
+   "codepoints": [
+    "U+2064"
+   ],
+   "uts46_status": [
+    "U+2064:ignored"
+   ],
+   "skeleton": "\u2064exarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "xn--example-cl7c.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-206A-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u206aple.com",
+   "note": "U+206A INHIBIT SYMMETRIC SWAPPING (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u206aple.com/path?q=1",
+   "email": "user@exam\u206aple.com",
+   "codepoints": [
+    "U+206A"
+   ],
+   "uts46_status": [
+    "U+206A:ignored"
+   ],
+   "skeleton": "exarn\u206aple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-206A-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u206aexample.com",
+   "note": "U+206A INHIBIT SYMMETRIC SWAPPING (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u206aexample.com/path?q=1",
+   "email": "user@\u206aexample.com",
+   "codepoints": [
+    "U+206A"
+   ],
+   "uts46_status": [
+    "U+206A:ignored"
+   ],
+   "skeleton": "\u206aexarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-206B-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u206bple.com",
+   "note": "U+206B ACTIVATE SYMMETRIC SWAPPING (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u206bple.com/path?q=1",
+   "email": "user@exam\u206bple.com",
+   "codepoints": [
+    "U+206B"
+   ],
+   "uts46_status": [
+    "U+206B:ignored"
+   ],
+   "skeleton": "exarn\u206bple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-206B-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u206bexample.com",
+   "note": "U+206B ACTIVATE SYMMETRIC SWAPPING (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u206bexample.com/path?q=1",
+   "email": "user@\u206bexample.com",
+   "codepoints": [
+    "U+206B"
+   ],
+   "uts46_status": [
+    "U+206B:ignored"
+   ],
+   "skeleton": "\u206bexarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-206C-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u206cple.com",
+   "note": "U+206C INHIBIT ARABIC FORM SHAPING (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u206cple.com/path?q=1",
+   "email": "user@exam\u206cple.com",
+   "codepoints": [
+    "U+206C"
+   ],
+   "uts46_status": [
+    "U+206C:ignored"
+   ],
+   "skeleton": "exarn\u206cple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-206C-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u206cexample.com",
+   "note": "U+206C INHIBIT ARABIC FORM SHAPING (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u206cexample.com/path?q=1",
+   "email": "user@\u206cexample.com",
+   "codepoints": [
+    "U+206C"
+   ],
+   "uts46_status": [
+    "U+206C:ignored"
+   ],
+   "skeleton": "\u206cexarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-206D-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u206dple.com",
+   "note": "U+206D ACTIVATE ARABIC FORM SHAPING (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u206dple.com/path?q=1",
+   "email": "user@exam\u206dple.com",
+   "codepoints": [
+    "U+206D"
+   ],
+   "uts46_status": [
+    "U+206D:ignored"
+   ],
+   "skeleton": "exarn\u206dple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-206D-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u206dexample.com",
+   "note": "U+206D ACTIVATE ARABIC FORM SHAPING (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u206dexample.com/path?q=1",
+   "email": "user@\u206dexample.com",
+   "codepoints": [
+    "U+206D"
+   ],
+   "uts46_status": [
+    "U+206D:ignored"
+   ],
+   "skeleton": "\u206dexarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-206E-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u206eple.com",
+   "note": "U+206E NATIONAL DIGIT SHAPES (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u206eple.com/path?q=1",
+   "email": "user@exam\u206eple.com",
+   "codepoints": [
+    "U+206E"
+   ],
+   "uts46_status": [
+    "U+206E:ignored"
+   ],
+   "skeleton": "exarn\u206eple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-206E-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u206eexample.com",
+   "note": "U+206E NATIONAL DIGIT SHAPES (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u206eexample.com/path?q=1",
+   "email": "user@\u206eexample.com",
+   "codepoints": [
+    "U+206E"
+   ],
+   "uts46_status": [
+    "U+206E:ignored"
+   ],
+   "skeleton": "\u206eexarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-206F-mid",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "exam\u206fple.com",
+   "note": "U+206F NOMINAL DIGIT SHAPES (ignored in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u206fple.com/path?q=1",
+   "email": "user@exam\u206fple.com",
+   "codepoints": [
+    "U+206F"
+   ],
+   "uts46_status": [
+    "U+206F:ignored"
+   ],
+   "skeleton": "exarn\u206fple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-206F-start",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "\u206fexample.com",
+   "note": "U+206F NOMINAL DIGIT SHAPES (ignored in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u206fexample.com/path?q=1",
+   "email": "user@\u206fexample.com",
+   "codepoints": [
+    "U+206F"
+   ],
+   "uts46_status": [
+    "U+206F:ignored"
+   ],
+   "skeleton": "\u206fexarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "accept"
+  },
+  {
+   "id": "inv-E0001-mid",
+   "class": "invisible",
+   "subclass": "disallowed",
+   "host": "exam\udb40\udc01ple.com",
+   "note": "U+E0001 LANGUAGE TAG (disallowed in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\udb40\udc01ple.com/path?q=1",
+   "email": "user@exam\udb40\udc01ple.com",
+   "codepoints": [
+    "U+E0001"
+   ],
+   "uts46_status": [
+    "U+E0001:disallowed"
+   ],
+   "skeleton": "exarn\udb40\udc01ple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-E0001-start",
+   "class": "invisible",
+   "subclass": "disallowed",
+   "host": "\udb40\udc01example.com",
+   "note": "U+E0001 LANGUAGE TAG (disallowed in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\udb40\udc01example.com/path?q=1",
+   "email": "user@\udb40\udc01example.com",
+   "codepoints": [
+    "U+E0001"
+   ],
+   "uts46_status": [
+    "U+E0001:disallowed"
+   ],
+   "skeleton": "\udb40\udc01exarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-E0020-mid",
+   "class": "invisible",
+   "subclass": "disallowed",
+   "host": "exam\udb40\udc20ple.com",
+   "note": "U+E0020 TAG SPACE (disallowed in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\udb40\udc20ple.com/path?q=1",
+   "email": "user@exam\udb40\udc20ple.com",
+   "codepoints": [
+    "U+E0020"
+   ],
+   "uts46_status": [
+    "U+E0020:disallowed"
+   ],
+   "skeleton": "exarn\udb40\udc20ple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-E0020-start",
+   "class": "invisible",
+   "subclass": "disallowed",
+   "host": "\udb40\udc20example.com",
+   "note": "U+E0020 TAG SPACE (disallowed in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\udb40\udc20example.com/path?q=1",
+   "email": "user@\udb40\udc20example.com",
+   "codepoints": [
+    "U+E0020"
+   ],
+   "uts46_status": [
+    "U+E0020:disallowed"
+   ],
+   "skeleton": "\udb40\udc20exarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-E0041-mid",
+   "class": "invisible",
+   "subclass": "disallowed",
+   "host": "exam\udb40\udc41ple.com",
+   "note": "U+E0041 TAG LATIN CAPITAL LETTER A (disallowed in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\udb40\udc41ple.com/path?q=1",
+   "email": "user@exam\udb40\udc41ple.com",
+   "codepoints": [
+    "U+E0041"
+   ],
+   "uts46_status": [
+    "U+E0041:disallowed"
+   ],
+   "skeleton": "exarn\udb40\udc41ple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-E0041-start",
+   "class": "invisible",
+   "subclass": "disallowed",
+   "host": "\udb40\udc41example.com",
+   "note": "U+E0041 TAG LATIN CAPITAL LETTER A (disallowed in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\udb40\udc41example.com/path?q=1",
+   "email": "user@\udb40\udc41example.com",
+   "codepoints": [
+    "U+E0041"
+   ],
+   "uts46_status": [
+    "U+E0041:disallowed"
+   ],
+   "skeleton": "\udb40\udc41exarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-E0041-end",
+   "class": "invisible",
+   "subclass": "disallowed",
+   "host": "example\udb40\udc41.com",
+   "note": "U+E0041 TAG LATIN CAPITAL LETTER A (disallowed in UTS 46) at label end",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example\udb40\udc41.com/path?q=1",
+   "email": "user@example\udb40\udc41.com",
+   "codepoints": [
+    "U+E0041"
+   ],
+   "uts46_status": [
+    "U+E0041:disallowed"
+   ],
+   "skeleton": "exarnple\udb40\udc41.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-E0041-tld",
+   "class": "invisible",
+   "subclass": "disallowed",
+   "host": "example.c\udb40\udc41om",
+   "note": "U+E0041 TAG LATIN CAPITAL LETTER A (disallowed in UTS 46) at label tld",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.c\udb40\udc41om/path?q=1",
+   "email": "user@example.c\udb40\udc41om",
+   "codepoints": [
+    "U+E0041"
+   ],
+   "uts46_status": [
+    "U+E0041:disallowed"
+   ],
+   "skeleton": "exarnple.c\udb40\udc41orn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-E007F-mid",
+   "class": "invisible",
+   "subclass": "disallowed",
+   "host": "exam\udb40\udc7fple.com",
+   "note": "U+E007F CANCEL TAG (disallowed in UTS 46) at label mid",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\udb40\udc7fple.com/path?q=1",
+   "email": "user@exam\udb40\udc7fple.com",
+   "codepoints": [
+    "U+E007F"
+   ],
+   "uts46_status": [
+    "U+E007F:disallowed"
+   ],
+   "skeleton": "exarn\udb40\udc7fple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-E007F-start",
+   "class": "invisible",
+   "subclass": "disallowed",
+   "host": "\udb40\udc7fexample.com",
+   "note": "U+E007F CANCEL TAG (disallowed in UTS 46) at label start",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\udb40\udc7fexample.com/path?q=1",
+   "email": "user@\udb40\udc7fexample.com",
+   "codepoints": [
+    "U+E007F"
+   ],
+   "uts46_status": [
+    "U+E007F:disallowed"
+   ],
+   "skeleton": "\udb40\udc7fexarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "inv-double",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "ex\u00adam\u200bple.com",
+   "note": "two different ignored characters in one label",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://ex\u00adam\u200bple.com/path?q=1",
+   "email": "user@ex\u00adam\u200bple.com",
+   "codepoints": [
+    "U+00AD",
+    "U+200B"
+   ],
+   "uts46_status": [
+    "U+00AD:ignored",
+    "U+200B:ignored"
+   ],
+   "skeleton": "ex\u00adarn\u200bple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-200B-x3",
+   "class": "invisible",
+   "subclass": "ignored",
+   "host": "e\u200bx\u200ba\u200bmple.com",
+   "note": "three zero-width spaces in one label",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://e\u200bx\u200ba\u200bmple.com/path?q=1",
+   "email": "user@e\u200bx\u200ba\u200bmple.com",
+   "codepoints": [
+    "U+200B",
+    "U+200B",
+    "U+200B"
+   ],
+   "uts46_status": [
+    "U+200B:ignored"
+   ],
+   "skeleton": "e\u200bx\u200ba\u200brnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-200C-valid-ctx",
+   "class": "invisible",
+   "subclass": "deviation",
+   "host": "\u0646\u0627\u0645\u0647\u200c\u0627\u06cc.example.com",
+   "note": "ZWNJ in a valid CONTEXTJ position (Persian); canonical keeps it (non-transitional)",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u0646\u0627\u0645\u0647\u200c\u0627\u06cc.example.com/path?q=1",
+   "email": "user@\u0646\u0627\u0645\u0647\u200c\u0627\u06cc.example.com",
+   "codepoints": [
+    "U+0646",
+    "U+0627",
+    "U+0645",
+    "U+0647",
+    "U+200C",
+    "U+0627",
+    "U+06CC"
+   ],
+   "uts46_status": [
+    "U+0627:valid",
+    "U+0645:valid",
+    "U+0646:valid",
+    "U+0647:valid",
+    "U+06CC:valid",
+    "U+200C:deviation"
+   ],
+   "skeleton": "\u0646l\u0645o\u200cl\u0649.exarnple.corn",
+   "canonical": "xn--mgba3gch31f060k.example.com",
+   "idna2008": "xn--mgba3gch31f060k.example.com",
+   "idna2003": "xn--mgba3gch31f.example.com",
+   "whatwg": "xn--mgba3gch31f060k.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "inv-200D-valid-ctx",
+   "class": "invisible",
+   "subclass": "deviation",
+   "host": "\u0915\u094d\u200d\u0937.example.com",
+   "note": "ZWJ after virama (Devanagari): valid CONTEXTJ; canonical keeps it",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u0915\u094d\u200d\u0937.example.com/path?q=1",
+   "email": "user@\u0915\u094d\u200d\u0937.example.com",
+   "codepoints": [
+    "U+0915",
+    "U+094D",
+    "U+200D",
+    "U+0937"
+   ],
+   "uts46_status": [
+    "U+0915:valid",
+    "U+0937:valid",
+    "U+094D:valid",
+    "U+200D:deviation"
+   ],
+   "skeleton": "\u0915\u094d\u200d\u0937.exarnple.corn",
+   "canonical": "xn--11b2ezcw70k.example.com",
+   "idna2008": "xn--11b2ezcw70k.example.com",
+   "idna2003": "xn--11b2ezc.example.com",
+   "whatwg": "xn--11b2ezcw70k.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-ff45-e",
+   "class": "confusable",
+   "subclass": "mapped-to-ascii",
+   "host": "\uff45xample.com",
+   "note": "FULLWIDTH LATIN SMALL LETTER E for e",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\uff45xample.com/path?q=1",
+   "email": "user@\uff45xample.com",
+   "codepoints": [
+    "U+FF45"
+   ],
+   "uts46_status": [
+    "U+FF45:mapped"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-ff-whole",
+   "class": "confusable",
+   "subclass": "mapped-to-ascii",
+   "host": "\uff45\uff58\uff41\uff4d\uff50\uff4c\uff45.com",
+   "note": "whole label in fullwidth Latin",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\uff45\uff58\uff41\uff4d\uff50\uff4c\uff45.com/path?q=1",
+   "email": "user@\uff45\uff58\uff41\uff4d\uff50\uff4c\uff45.com",
+   "codepoints": [
+    "U+FF45",
+    "U+FF58",
+    "U+FF41",
+    "U+FF4D",
+    "U+FF50",
+    "U+FF4C",
+    "U+FF45"
+   ],
+   "uts46_status": [
+    "U+FF41:mapped",
+    "U+FF45:mapped",
+    "U+FF4C:mapped",
+    "U+FF4D:mapped",
+    "U+FF50:mapped",
+    "U+FF58:mapped"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-1d41e-e",
+   "class": "confusable",
+   "subclass": "mapped-to-ascii",
+   "host": "\ud835\udc1example.com",
+   "note": "MATHEMATICAL BOLD SMALL E for e",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\ud835\udc1example.com/path?q=1",
+   "email": "user@\ud835\udc1example.com",
+   "codepoints": [
+    "U+1D41E"
+   ],
+   "uts46_status": [
+    "U+1D41E:mapped"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-1d5be-e",
+   "class": "confusable",
+   "subclass": "mapped-to-ascii",
+   "host": "\ud835\uddbexample.com",
+   "note": "MATHEMATICAL SANS-SERIF SMALL E for e",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\ud835\uddbexample.com/path?q=1",
+   "email": "user@\ud835\uddbexample.com",
+   "codepoints": [
+    "U+1D5BE"
+   ],
+   "uts46_status": [
+    "U+1D5BE:mapped"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-212a-k",
+   "class": "confusable",
+   "subclass": "mapped-to-ascii",
+   "host": "\u212aeep.example.com",
+   "note": "KELVIN SIGN for k",
+   "looks_like": "Keep.exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u212aeep.example.com/path?q=1",
+   "email": "user@\u212aeep.example.com",
+   "codepoints": [
+    "U+212A"
+   ],
+   "uts46_status": [
+    "U+212A:mapped"
+   ],
+   "skeleton": "Keep.exarnple.corn",
+   "canonical": "keep.example.com",
+   "idna2008": "keep.example.com",
+   "idna2003": "keep.example.com",
+   "whatwg": "keep.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-017f-s",
+   "class": "confusable",
+   "subclass": "mapped-to-ascii",
+   "host": "\u017fample.example.com",
+   "note": "LATIN SMALL LETTER LONG S for s",
+   "looks_like": "farnple.exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u017fample.example.com/path?q=1",
+   "email": "user@\u017fample.example.com",
+   "codepoints": [
+    "U+017F"
+   ],
+   "uts46_status": [
+    "U+017F:mapped"
+   ],
+   "skeleton": "farnple.exarnple.corn",
+   "canonical": "sample.example.com",
+   "idna2008": "sample.example.com",
+   "idna2003": "sample.example.com",
+   "whatwg": "sample.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-2102-c",
+   "class": "confusable",
+   "subclass": "mapped-to-ascii",
+   "host": "\u2102ode.example.com",
+   "note": "DOUBLE-STRUCK CAPITAL C maps to c",
+   "looks_like": "Code.exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u2102ode.example.com/path?q=1",
+   "email": "user@\u2102ode.example.com",
+   "codepoints": [
+    "U+2102"
+   ],
+   "uts46_status": [
+    "U+2102:mapped"
+   ],
+   "skeleton": "Code.exarnple.corn",
+   "canonical": "code.example.com",
+   "idna2008": "code.example.com",
+   "idna2003": "code.example.com",
+   "whatwg": "code.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-2460-1",
+   "class": "confusable",
+   "subclass": "mapped-to-ascii",
+   "host": "examp\u2460e.com",
+   "note": "CIRCLED DIGIT ONE maps to 1 (so looks like examp1e)",
+   "looks_like": "exarnp\u2780e.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://examp\u2460e.com/path?q=1",
+   "email": "user@examp\u2460e.com",
+   "codepoints": [
+    "U+2460"
+   ],
+   "uts46_status": [
+    "U+2460:mapped"
+   ],
+   "skeleton": "exarnp\u2780e.corn",
+   "canonical": "examp1e.com",
+   "idna2008": "examp1e.com",
+   "idna2003": "examp1e.com",
+   "whatwg": "examp1e.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-ff10-0",
+   "class": "confusable",
+   "subclass": "mapped-to-ascii",
+   "host": "examp1e.c\uff10m",
+   "note": "FULLWIDTH DIGIT ZERO maps to 0",
+   "looks_like": "exarnple.cOrn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://examp1e.c\uff10m/path?q=1",
+   "email": "user@examp1e.c\uff10m",
+   "codepoints": [
+    "U+FF10"
+   ],
+   "uts46_status": [
+    "U+FF10:mapped"
+   ],
+   "skeleton": "exarnple.cOrn",
+   "canonical": "examp1e.c0m",
+   "idna2008": "examp1e.c0m",
+   "idna2003": "examp1e.c0m",
+   "whatwg": "examp1e.c0m",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-00aa-a",
+   "class": "confusable",
+   "subclass": "mapped-to-ascii",
+   "host": "ex\u00aample.com",
+   "note": "FEMININE ORDINAL INDICATOR maps to a",
+   "looks_like": "ex\u00aarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://ex\u00aample.com/path?q=1",
+   "email": "user@ex\u00aample.com",
+   "codepoints": [
+    "U+00AA"
+   ],
+   "uts46_status": [
+    "U+00AA:mapped"
+   ],
+   "skeleton": "ex\u00aarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-2113-l",
+   "class": "confusable",
+   "subclass": "mapped-to-ascii",
+   "host": "examp\u2113e.com",
+   "note": "SCRIPT SMALL L maps to l",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://examp\u2113e.com/path?q=1",
+   "email": "user@examp\u2113e.com",
+   "codepoints": [
+    "U+2113"
+   ],
+   "uts46_status": [
+    "U+2113:mapped"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-ff0d-hyphen",
+   "class": "confusable",
+   "subclass": "mapped-to-ascii",
+   "host": "exam\uff0dple.com",
+   "note": "FULLWIDTH HYPHEN-MINUS maps to -",
+   "looks_like": "exarn\u30fcple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\uff0dple.com/path?q=1",
+   "email": "user@exam\uff0dple.com",
+   "codepoints": [
+    "U+FF0D"
+   ],
+   "uts46_status": [
+    "U+FF0D:mapped"
+   ],
+   "skeleton": "exarn\u30fcple.corn",
+   "canonical": "exam-ple.com",
+   "idna2008": "exam-ple.com",
+   "idna2003": "exam-ple.com",
+   "whatwg": "exam-ple.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-212b",
+   "class": "confusable",
+   "subclass": "mapped-to-nonascii",
+   "host": "\u212bngstrom.example.com",
+   "note": "ANGSTROM SIGN maps to a-ring (U+00E5)",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u212bngstrom.example.com/path?q=1",
+   "email": "user@\u212bngstrom.example.com",
+   "codepoints": [
+    "U+212B"
+   ],
+   "uts46_status": [
+    "U+212B:mapped"
+   ],
+   "skeleton": "A\u030angstrorn.exarnple.corn",
+   "canonical": "xn--ngstrom-dxa.example.com",
+   "idna2008": "xn--ngstrom-dxa.example.com",
+   "idna2003": "xn--ngstrom-dxa.example.com",
+   "whatwg": "xn--ngstrom-dxa.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-mapped-0130",
+   "class": "confusable",
+   "subclass": "mapped-to-nonascii",
+   "host": "\u0130nfo.example.com",
+   "note": "CAPITAL I WITH DOT ABOVE maps to i + U+0307",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u0130nfo.example.com/path?q=1",
+   "email": "user@\u0130nfo.example.com",
+   "codepoints": [
+    "U+0130"
+   ],
+   "uts46_status": [
+    "U+0130:mapped"
+   ],
+   "skeleton": "l\u0307nfo.exarnple.corn",
+   "canonical": "xn--info-qwc.example.com",
+   "idna2008": "xn--info-qwc.example.com",
+   "idna2003": "xn--info-qwc.example.com",
+   "whatwg": "xn--info-qwc.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-cyr-0430",
+   "class": "confusable",
+   "subclass": "cyrillic",
+   "host": "ex\u0430mple.com",
+   "note": "CYRILLIC SMALL A for a",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://ex\u0430mple.com/path?q=1",
+   "email": "user@ex\u0430mple.com",
+   "codepoints": [
+    "U+0430"
+   ],
+   "uts46_status": [
+    "U+0430:valid"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "xn--exmple-4nf.com",
+   "idna2008": "xn--exmple-4nf.com",
+   "idna2003": "xn--exmple-4nf.com",
+   "whatwg": "xn--exmple-4nf.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-cyr-0435",
+   "class": "confusable",
+   "subclass": "cyrillic",
+   "host": "\u0435xample.com",
+   "note": "CYRILLIC SMALL IE for e",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u0435xample.com/path?q=1",
+   "email": "user@\u0435xample.com",
+   "codepoints": [
+    "U+0435"
+   ],
+   "uts46_status": [
+    "U+0435:valid"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "xn--xample-2of.com",
+   "idna2008": "xn--xample-2of.com",
+   "idna2003": "xn--xample-2of.com",
+   "whatwg": "xn--xample-2of.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-cyr-043e",
+   "class": "confusable",
+   "subclass": "cyrillic",
+   "host": "example.c\u043em",
+   "note": "CYRILLIC SMALL O for o (in TLD label)",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.c\u043em/path?q=1",
+   "email": "user@example.c\u043em",
+   "codepoints": [
+    "U+043E"
+   ],
+   "uts46_status": [
+    "U+043E:valid"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "example.xn--cm-fmc",
+   "idna2008": "example.xn--cm-fmc",
+   "idna2003": "example.xn--cm-fmc",
+   "whatwg": "example.xn--cm-fmc",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-cyr-0440",
+   "class": "confusable",
+   "subclass": "cyrillic",
+   "host": "exam\u0440le.com",
+   "note": "CYRILLIC SMALL ER for p",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u0440le.com/path?q=1",
+   "email": "user@exam\u0440le.com",
+   "codepoints": [
+    "U+0440"
+   ],
+   "uts46_status": [
+    "U+0440:valid"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "xn--examle-erf.com",
+   "idna2008": "xn--examle-erf.com",
+   "idna2003": "xn--examle-erf.com",
+   "whatwg": "xn--examle-erf.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-cyr-0441",
+   "class": "confusable",
+   "subclass": "cyrillic",
+   "host": "example.\u0441om",
+   "note": "CYRILLIC SMALL ES for c (in TLD label)",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.\u0441om/path?q=1",
+   "email": "user@example.\u0441om",
+   "codepoints": [
+    "U+0441"
+   ],
+   "uts46_status": [
+    "U+0441:valid"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "example.xn--om-nmc",
+   "idna2008": "example.xn--om-nmc",
+   "idna2003": "example.xn--om-nmc",
+   "whatwg": "example.xn--om-nmc",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-cyr-0445",
+   "class": "confusable",
+   "subclass": "cyrillic",
+   "host": "e\u0445ample.com",
+   "note": "CYRILLIC SMALL HA for x",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://e\u0445ample.com/path?q=1",
+   "email": "user@e\u0445ample.com",
+   "codepoints": [
+    "U+0445"
+   ],
+   "uts46_status": [
+    "U+0445:valid"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "xn--eample-bsf.com",
+   "idna2008": "xn--eample-bsf.com",
+   "idna2003": "xn--eample-bsf.com",
+   "whatwg": "xn--eample-bsf.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-cyr-whole",
+   "class": "confusable",
+   "subclass": "cyrillic",
+   "host": "\u0441\u043e\u0440\u0435.example.com",
+   "note": "whole-Cyrillic label that reads cope",
+   "looks_like": "cope.exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u0441\u043e\u0440\u0435.example.com/path?q=1",
+   "email": "user@\u0441\u043e\u0440\u0435.example.com",
+   "codepoints": [
+    "U+0441",
+    "U+043E",
+    "U+0440",
+    "U+0435"
+   ],
+   "uts46_status": [
+    "U+0435:valid",
+    "U+043E:valid",
+    "U+0440:valid",
+    "U+0441:valid"
+   ],
+   "skeleton": "cope.exarnple.corn",
+   "canonical": "xn--e1argc.example.com",
+   "idna2008": "xn--e1argc.example.com",
+   "idna2003": "xn--e1argc.example.com",
+   "whatwg": "xn--e1argc.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-grk-03bf",
+   "class": "confusable",
+   "subclass": "greek",
+   "host": "example.c\u03bfm",
+   "note": "GREEK SMALL OMICRON for o",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.c\u03bfm/path?q=1",
+   "email": "user@example.c\u03bfm",
+   "codepoints": [
+    "U+03BF"
+   ],
+   "uts46_status": [
+    "U+03BF:valid"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "example.xn--cm-jbc",
+   "idna2008": "example.xn--cm-jbc",
+   "idna2003": "example.xn--cm-jbc",
+   "whatwg": "example.xn--cm-jbc",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-grk-03b1",
+   "class": "confusable",
+   "subclass": "greek",
+   "host": "ex\u03b1mple.com",
+   "note": "GREEK SMALL ALPHA for a",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://ex\u03b1mple.com/path?q=1",
+   "email": "user@ex\u03b1mple.com",
+   "codepoints": [
+    "U+03B1"
+   ],
+   "uts46_status": [
+    "U+03B1:valid"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "xn--exmple-qxe.com",
+   "idna2008": "xn--exmple-qxe.com",
+   "idna2003": "xn--exmple-qxe.com",
+   "whatwg": "xn--exmple-qxe.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-grk-03c1",
+   "class": "confusable",
+   "subclass": "greek",
+   "host": "exam\u03c1le.com",
+   "note": "GREEK SMALL RHO for p",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u03c1le.com/path?q=1",
+   "email": "user@exam\u03c1le.com",
+   "codepoints": [
+    "U+03C1"
+   ],
+   "uts46_status": [
+    "U+03C1:valid"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "xn--examle-z0e.com",
+   "idna2008": "xn--examle-z0e.com",
+   "idna2003": "xn--examle-z0e.com",
+   "whatwg": "xn--examle-z0e.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-arm-0585",
+   "class": "confusable",
+   "subclass": "armenian",
+   "host": "example.c\u0585m",
+   "note": "ARMENIAN SMALL OH for o",
+   "looks_like": "exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.c\u0585m/path?q=1",
+   "email": "user@example.c\u0585m",
+   "codepoints": [
+    "U+0585"
+   ],
+   "uts46_status": [
+    "U+0585:valid"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "example.xn--cm-gfd",
+   "idna2008": "example.xn--cm-gfd",
+   "idna2003": "example.xn--cm-gfd",
+   "whatwg": "example.xn--cm-gfd",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-arm-0578",
+   "class": "confusable",
+   "subclass": "armenian",
+   "host": "\u0578ote.example.com",
+   "note": "ARMENIAN SMALL VO for n",
+   "looks_like": "note.exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u0578ote.example.com/path?q=1",
+   "email": "user@\u0578ote.example.com",
+   "codepoints": [
+    "U+0578"
+   ],
+   "uts46_status": [
+    "U+0578:valid"
+   ],
+   "skeleton": "note.exarnple.corn",
+   "canonical": "xn--ote-nfe.example.com",
+   "idna2008": "xn--ote-nfe.example.com",
+   "idna2003": "xn--ote-nfe.example.com",
+   "whatwg": "xn--ote-nfe.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-arm-0570",
+   "class": "confusable",
+   "subclass": "armenian",
+   "host": "\u0570ome.example.com",
+   "note": "ARMENIAN SMALL HO for h",
+   "looks_like": "horne.exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u0570ome.example.com/path?q=1",
+   "email": "user@\u0570ome.example.com",
+   "codepoints": [
+    "U+0570"
+   ],
+   "uts46_status": [
+    "U+0570:valid"
+   ],
+   "skeleton": "horne.exarnple.corn",
+   "canonical": "xn--ome-qee.example.com",
+   "idna2008": "xn--ome-qee.example.com",
+   "idna2003": "xn--ome-qee.example.com",
+   "whatwg": "xn--ome-qee.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-arm-057d",
+   "class": "confusable",
+   "subclass": "armenian",
+   "host": "\u057dser.example.com",
+   "note": "ARMENIAN SMALL SEH for u",
+   "looks_like": "user.exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u057dser.example.com/path?q=1",
+   "email": "user@\u057dser.example.com",
+   "codepoints": [
+    "U+057D"
+   ],
+   "uts46_status": [
+    "U+057D:valid"
+   ],
+   "skeleton": "user.exarnple.corn",
+   "canonical": "xn--ser-7fe.example.com",
+   "idna2008": "xn--ser-7fe.example.com",
+   "idna2003": "xn--ser-7fe.example.com",
+   "whatwg": "xn--ser-7fe.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-proto-0442",
+   "class": "confusable",
+   "subclass": "nonascii-prototype",
+   "host": "\u0442est.example.com",
+   "note": "CYRILLIC SMALL TE; prototype is U+1D1B, not t",
+   "looks_like": "\u1d1best.exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u0442est.example.com/path?q=1",
+   "email": "user@\u0442est.example.com",
+   "codepoints": [
+    "U+0442"
+   ],
+   "uts46_status": [
+    "U+0442:valid"
+   ],
+   "skeleton": "\u1d1best.exarnple.corn",
+   "canonical": "xn--est-7ed.example.com",
+   "idna2008": "xn--est-7ed.example.com",
+   "idna2003": "xn--est-7ed.example.com",
+   "whatwg": "xn--est-7ed.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-proto-1d1b",
+   "class": "confusable",
+   "subclass": "nonascii-prototype",
+   "host": "\u1d1best.example.com",
+   "note": "LATIN LETTER SMALL CAPITAL T (the prototype itself)",
+   "looks_like": "\u1d1best.exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u1d1best.example.com/path?q=1",
+   "email": "user@\u1d1best.example.com",
+   "codepoints": [
+    "U+1D1B"
+   ],
+   "uts46_status": [
+    "U+1D1B:valid"
+   ],
+   "skeleton": "\u1d1best.exarnple.corn",
+   "canonical": "xn--est-65x.example.com",
+   "idna2008": "xn--est-65x.example.com",
+   "idna2003": "xn--est-65x.example.com",
+   "whatwg": "xn--est-65x.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-proto-03ba",
+   "class": "confusable",
+   "subclass": "nonascii-prototype",
+   "host": "\u03baeep.example.com",
+   "note": "GREEK SMALL KAPPA; prototype is U+0138 kra, not k",
+   "looks_like": "\u0138eep.exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u03baeep.example.com/path?q=1",
+   "email": "user@\u03baeep.example.com",
+   "codepoints": [
+    "U+03BA"
+   ],
+   "uts46_status": [
+    "U+03BA:valid"
+   ],
+   "skeleton": "\u0138eep.exarnple.corn",
+   "canonical": "xn--eep-oyc.example.com",
+   "idna2008": "xn--eep-oyc.example.com",
+   "idna2003": "xn--eep-oyc.example.com",
+   "whatwg": "xn--eep-oyc.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-proto-0138",
+   "class": "confusable",
+   "subclass": "nonascii-prototype",
+   "host": "\u0138eep.example.com",
+   "note": "LATIN SMALL LETTER KRA (the prototype itself)",
+   "looks_like": "\u0138eep.exarnple.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u0138eep.example.com/path?q=1",
+   "email": "user@\u0138eep.example.com",
+   "codepoints": [
+    "U+0138"
+   ],
+   "uts46_status": [
+    "U+0138:valid"
+   ],
+   "skeleton": "\u0138eep.exarnple.corn",
+   "canonical": "xn--eep-bva.example.com",
+   "idna2008": "xn--eep-bva.example.com",
+   "idna2003": "xn--eep-bva.example.com",
+   "whatwg": "xn--eep-bva.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "cfs-0131-l",
+   "class": "confusable",
+   "subclass": "latin-valid",
+   "host": "examp\u0131e.com",
+   "note": "DOTLESS I for l; valid, not mapped",
+   "looks_like": "exarnpie.corn",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://examp\u0131e.com/path?q=1",
+   "email": "user@examp\u0131e.com",
+   "codepoints": [
+    "U+0131"
+   ],
+   "uts46_status": [
+    "U+0131:valid"
+   ],
+   "skeleton": "exarnpie.corn",
+   "canonical": "xn--exampe-t9a.com",
+   "idna2008": "xn--exampe-t9a.com",
+   "idna2003": "xn--exampe-t9a.com",
+   "whatwg": "xn--exampe-t9a.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-pny-mixed-cyr",
+   "class": "idna",
+   "subclass": "punycode-mixed-script",
+   "host": "xn--exmple-4nf.com",
+   "note": "valid A-label that decodes to Latin + Cyrillic a",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://xn--exmple-4nf.com/path?q=1",
+   "email": "user@xn--exmple-4nf.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "xn--exrnple-4nf.corn",
+   "canonical": "xn--exmple-4nf.com",
+   "idna2008": "xn--exmple-4nf.com",
+   "idna2003": "xn--exmple-4nf.com",
+   "whatwg": "xn--exmple-4nf.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-pny-invisible",
+   "class": "idna",
+   "subclass": "punycode-decodes-invalid",
+   "host": "xn--example-3z6c.com",
+   "note": "A-label whose decoded form contains U+200B (ignored): invalid",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://xn--example-3z6c.com/path?q=1",
+   "email": "user@xn--example-3z6c.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "xn--exarnple-3z6c.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "xn--example-3z6c.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "idn-pny-tag",
+   "class": "idna",
+   "subclass": "punycode-decodes-invalid",
+   "host": "xn--example-6p501d.com",
+   "note": "A-label whose decoded form contains a tag character (disallowed)",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://xn--example-6p501d.com/path?q=1",
+   "email": "user@xn--example-6p501d.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "xn--exarnple-6p5Old.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "xn--example-6p501d.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "idn-pny-upper-inside",
+   "class": "idna",
+   "subclass": "punycode-decodes-invalid",
+   "host": "xn--Exmple-4nf.com",
+   "note": "A-label whose decoded form has an upper-case letter: not in canonical form",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://xn--Exmple-4nf.com/path?q=1",
+   "email": "user@xn--Exmple-4nf.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "xn--Exrnple-4nf.corn",
+   "canonical": "xn--exmple-4nf.com",
+   "idna2008": "xn--exmple-4nf.com",
+   "idna2003": "xn--Exmple-4nf.com",
+   "whatwg": "xn--exmple-4nf.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-pny-dot-inside",
+   "class": "idna",
+   "subclass": "punycode-decodes-invalid",
+   "host": "xn--examplecom-th3i.test",
+   "note": "A-label whose decoded form contains an ideographic full stop",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://xn--examplecom-th3i.test/path?q=1",
+   "email": "user@xn--examplecom-th3i.test",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "xn--exarnplecorn-th3i.test",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "xn--examplecom-th3i.test",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "idn-pny-ascii-only",
+   "class": "idna",
+   "subclass": "punycode-ascii-only",
+   "host": "xn--example-.com",
+   "note": "A-label that decodes to pure ASCII: not permitted",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://xn--example-.com/path?q=1",
+   "email": "user@xn--example-.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "xn--exarnple-.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "xn--example-.com",
+   "whatwg": "xn--example-.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-pny-empty",
+   "class": "idna",
+   "subclass": "punycode-invalid",
+   "host": "xn--.com",
+   "note": "xn-- with nothing after it",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://xn--.com/path?q=1",
+   "email": "user@xn--.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "xn--.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "xn--.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "idn-pny-garbage",
+   "class": "idna",
+   "subclass": "punycode-invalid",
+   "host": "xn--zzzzzzzzzzzzzzzzzzzzzzzz.com",
+   "note": "xn-- with input that is not valid Punycode output",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://xn--zzzzzzzzzzzzzzzzzzzzzzzz.com/path?q=1",
+   "email": "user@xn--zzzzzzzzzzzzzzzzzzzzzzzz.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "xn--zzzzzzzzzzzzzzzzzzzzzzzz.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "xn--zzzzzzzzzzzzzzzzzzzzzzzz.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "idn-pny-upper-prefix",
+   "class": "idna",
+   "subclass": "punycode-case",
+   "host": "XN--BCHER-KVA.example",
+   "note": "upper-case XN-- prefix; canonical is lower-case",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": true,
+   "url": "https://XN--BCHER-KVA.example/path?q=1",
+   "email": "user@XN--BCHER-KVA.example",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "XN--BCHER-KVA.exarnple",
+   "canonical": "xn--bcher-kva.example",
+   "idna2008": "xn--bcher-kva.example",
+   "idna2003": "XN--BCHER-KVA.example",
+   "whatwg": "xn--bcher-kva.example",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-pny-mixed-prefix",
+   "class": "idna",
+   "subclass": "punycode-case",
+   "host": "Xn--bcher-kva.example",
+   "note": "mixed-case Xn-- prefix",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": true,
+   "url": "https://Xn--bcher-kva.example/path?q=1",
+   "email": "user@Xn--bcher-kva.example",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "Xn--bcher-kva.exarnple",
+   "canonical": "xn--bcher-kva.example",
+   "idna2008": "xn--bcher-kva.example",
+   "idna2003": "Xn--bcher-kva.example",
+   "whatwg": "xn--bcher-kva.example",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-len-63",
+   "class": "idna",
+   "subclass": "label-length",
+   "host": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+   "note": "63-octet label: valid",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com/path?q=1",
+   "email": "user@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.exarnple.corn",
+   "canonical": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+   "idna2008": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+   "idna2003": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+   "whatwg": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-len-64",
+   "class": "idna",
+   "subclass": "label-length",
+   "host": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+   "note": "64-octet label: invalid",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com/path?q=1",
+   "email": "user@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.exarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-len-u63",
+   "class": "idna",
+   "subclass": "label-length",
+   "host": "\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fcaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+   "note": "U-label whose A-label is exactly 63 octets (56 code points): valid",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fcaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com/path?q=1",
+   "email": "user@\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fcaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+   "codepoints": [
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC"
+   ],
+   "uts46_status": [
+    "U+00FC:valid"
+   ],
+   "skeleton": "u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.exarnple.corn",
+   "canonical": "xn--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-zbeaaaaaaaaaaaaaaaa.example.com",
+   "idna2008": "xn--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-zbeaaaaaaaaaaaaaaaa.example.com",
+   "idna2003": "xn--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-zbeaaaaaaaaaaaaaaaa.example.com",
+   "whatwg": "xn--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-zbeaaaaaaaaaaaaaaaa.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-len-u64",
+   "class": "idna",
+   "subclass": "label-length",
+   "host": "\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fcaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+   "note": "U-label of 57 code points whose A-label is 64 octets: invalid under VerifyDnsLength; WHATWG does not check length",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fcaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com/path?q=1",
+   "email": "user@\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fc\u00fcaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.com",
+   "codepoints": [
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC",
+    "U+00FC"
+   ],
+   "uts46_status": [
+    "U+00FC:valid"
+   ],
+   "skeleton": "u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308u\u0308aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.exarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": "xn--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-zbeaaaaaaaaaaaaaaaaa.example.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-len-253",
+   "class": "idna",
+   "subclass": "name-length",
+   "host": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "note": "253-octet name: valid",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/path?q=1",
+   "email": "user@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "canonical": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "idna2008": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "idna2003": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "whatwg": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-len-254",
+   "class": "idna",
+   "subclass": "name-length",
+   "host": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "note": "254-octet name: invalid",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/path?q=1",
+   "email": "user@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "whatwg": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-sep-3002",
+   "class": "idna",
+   "subclass": "fullwidth-dot",
+   "host": "example\u3002com",
+   "note": "IDEOGRAPHIC FULL STOP as label separator (mapped to .)",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example\u3002com/path?q=1",
+   "email": "user@example\u3002com",
+   "codepoints": [
+    "U+3002"
+   ],
+   "uts46_status": [
+    "U+3002:mapped"
+   ],
+   "skeleton": "exarnple\u02f3corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-sep-ff0e",
+   "class": "idna",
+   "subclass": "fullwidth-dot",
+   "host": "example\uff0ecom",
+   "note": "FULLWIDTH FULL STOP as separator",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example\uff0ecom/path?q=1",
+   "email": "user@example\uff0ecom",
+   "codepoints": [
+    "U+FF0E"
+   ],
+   "uts46_status": [
+    "U+FF0E:mapped"
+   ],
+   "skeleton": "exarnple.corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-sep-ff61",
+   "class": "idna",
+   "subclass": "fullwidth-dot",
+   "host": "example\uff61com",
+   "note": "HALFWIDTH IDEOGRAPHIC FULL STOP as separator",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example\uff61com/path?q=1",
+   "email": "user@example\uff61com",
+   "codepoints": [
+    "U+FF61"
+   ],
+   "uts46_status": [
+    "U+FF61:mapped"
+   ],
+   "skeleton": "exarnple\u02f3corn",
+   "canonical": "example.com",
+   "idna2008": "example.com",
+   "idna2003": "example.com",
+   "whatwg": "example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-sep-3002-sub",
+   "class": "idna",
+   "subclass": "fullwidth-dot",
+   "host": "www\u3002example.com",
+   "note": "IDEOGRAPHIC FULL STOP between subdomain and domain",
+   "looks_like": "www.example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://www\u3002example.com/path?q=1",
+   "email": "user@www\u3002example.com",
+   "codepoints": [
+    "U+3002"
+   ],
+   "uts46_status": [
+    "U+3002:mapped"
+   ],
+   "skeleton": "www\u02f3exarnple.corn",
+   "canonical": "www.example.com",
+   "idna2008": "www.example.com",
+   "idna2003": "www.example.com",
+   "whatwg": "www.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-dot-trailing",
+   "class": "idna",
+   "subclass": "dots",
+   "host": "example.com.",
+   "note": "trailing dot (root label); canonical keeps it",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": true,
+   "url": "https://example.com./path?q=1",
+   "email": "user@example.com.",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "exarnple.corn.",
+   "canonical": "example.com.",
+   "idna2008": "example.com.",
+   "idna2003": "example.com.",
+   "whatwg": "example.com.",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-dot-trailing2",
+   "class": "idna",
+   "subclass": "dots",
+   "host": "example.com..",
+   "note": "two trailing dots: empty label, invalid",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.com../path?q=1",
+   "email": "user@example.com..",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "exarnple.corn..",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": "example.com..",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-dot-leading",
+   "class": "idna",
+   "subclass": "dots",
+   "host": ".example.com",
+   "note": "leading dot: empty label, invalid",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://.example.com/path?q=1",
+   "email": "user@.example.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": ".exarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": ".example.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-dot-double",
+   "class": "idna",
+   "subclass": "dots",
+   "host": "example..com",
+   "note": "empty interior label, invalid",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example..com/path?q=1",
+   "email": "user@example..com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "exarnple..corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": "example..com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-sp-lead",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": " example.com",
+   "note": "leading space",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https:// example.com/path?q=1",
+   "email": "user@ example.com",
+   "codepoints": [
+    "U+0020"
+   ],
+   "uts46_status": [
+    "U+0020:valid"
+   ],
+   "skeleton": " exarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": " example.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-sp-trail",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": "example.com ",
+   "note": "trailing space",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.com /path?q=1",
+   "email": "user@example.com ",
+   "codepoints": [
+    "U+0020"
+   ],
+   "uts46_status": [
+    "U+0020:valid"
+   ],
+   "skeleton": "exarnple.corn ",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "example.com ",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-tab-lead",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": "\texample.com",
+   "note": "leading tab",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\texample.com/path?q=1",
+   "email": "user@\texample.com",
+   "codepoints": [
+    "U+0009"
+   ],
+   "uts46_status": [
+    "U+0009:valid"
+   ],
+   "skeleton": "\texarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "\texample.com",
+   "whatwg": "example.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-nl-trail",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": "example.com\n",
+   "note": "trailing newline",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.com\n/path?q=1",
+   "email": "user@example.com\n",
+   "codepoints": [
+    "U+000A"
+   ],
+   "uts46_status": [
+    "U+000A:valid"
+   ],
+   "skeleton": "exarnple.corn\n",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "example.com\n",
+   "whatwg": "example.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-cr-trail",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": "example.com\r",
+   "note": "trailing carriage return",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.com\r/path?q=1",
+   "email": "user@example.com\r",
+   "codepoints": [
+    "U+000D"
+   ],
+   "uts46_status": [
+    "U+000D:valid"
+   ],
+   "skeleton": "exarnple.corn\r",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "example.com\r",
+   "whatwg": "example.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-tab-mid",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": "exam\tple.com",
+   "note": "interior tab (WHATWG strips tabs and newlines anywhere)",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\tple.com/path?q=1",
+   "email": "user@exam\tple.com",
+   "codepoints": [
+    "U+0009"
+   ],
+   "uts46_status": [
+    "U+0009:valid"
+   ],
+   "skeleton": "exarn\tple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "exam\tple.com",
+   "whatwg": "example.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-nl-mid",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": "exam\nple.com",
+   "note": "interior newline",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\nple.com/path?q=1",
+   "email": "user@exam\nple.com",
+   "codepoints": [
+    "U+000A"
+   ],
+   "uts46_status": [
+    "U+000A:valid"
+   ],
+   "skeleton": "exarn\nple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "exam\nple.com",
+   "whatwg": "example.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-cr-mid",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": "exam\rple.com",
+   "note": "interior carriage return",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\rple.com/path?q=1",
+   "email": "user@exam\rple.com",
+   "codepoints": [
+    "U+000D"
+   ],
+   "uts46_status": [
+    "U+000D:valid"
+   ],
+   "skeleton": "exarn\rple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "exam\rple.com",
+   "whatwg": "example.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-c0-01-mid",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": "exam\u0001ple.com",
+   "note": "interior U+0001",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u0001ple.com/path?q=1",
+   "email": "user@exam\u0001ple.com",
+   "codepoints": [
+    "U+0001"
+   ],
+   "uts46_status": [
+    "U+0001:valid"
+   ],
+   "skeleton": "exarn\u0001ple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "exam\u0001ple.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-del-mid",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": "exam\u007fple.com",
+   "note": "interior DELETE",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://exam\u007fple.com/path?q=1",
+   "email": "user@exam\u007fple.com",
+   "codepoints": [
+    "U+007F"
+   ],
+   "uts46_status": [
+    "U+007F:valid"
+   ],
+   "skeleton": "exarn\u007fple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "exam\u007fple.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-nul-trail",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": "example.com\u0000",
+   "note": "trailing NUL",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example.com\u0000/path?q=1",
+   "email": "user@example.com\u0000",
+   "codepoints": [
+    "U+0000"
+   ],
+   "uts46_status": [
+    "U+0000:valid"
+   ],
+   "skeleton": "exarnple.corn\u0000",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "example.com\u0000",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-nbsp-lead",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": "\u00a0example.com",
+   "note": "leading NO-BREAK SPACE (mapped to space, disallowed under STD3)",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u00a0example.com/path?q=1",
+   "email": "user@\u00a0example.com",
+   "codepoints": [
+    "U+00A0"
+   ],
+   "uts46_status": [
+    "U+00A0:mapped"
+   ],
+   "skeleton": " exarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": " example.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-vt-lead",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": "\u000bexample.com",
+   "note": "leading vertical tab",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u000bexample.com/path?q=1",
+   "email": "user@\u000bexample.com",
+   "codepoints": [
+    "U+000B"
+   ],
+   "uts46_status": [
+    "U+000B:valid"
+   ],
+   "skeleton": "\u000bexarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "\u000bexample.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "idn-ws-ff-lead",
+   "class": "idna",
+   "subclass": "whitespace-control",
+   "host": "\fexample.com",
+   "note": "leading form feed",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\fexample.com/path?q=1",
+   "email": "user@\fexample.com",
+   "codepoints": [
+    "U+000C"
+   ],
+   "uts46_status": [
+    "U+000C:valid"
+   ],
+   "skeleton": "\fexarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "\fexample.com",
+   "whatwg": null,
+   "expected": "reject"
+  },
+  {
+   "id": "idn-hy-lead",
+   "class": "idna",
+   "subclass": "hyphen",
+   "host": "-example.com",
+   "note": "leading hyphen: CheckHyphens fails; WHATWG allows",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://-example.com/path?q=1",
+   "email": "user@-example.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "-exarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "-example.com",
+   "whatwg": "-example.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-hy-trail",
+   "class": "idna",
+   "subclass": "hyphen",
+   "host": "example-.com",
+   "note": "trailing hyphen: CheckHyphens fails; WHATWG allows",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://example-.com/path?q=1",
+   "email": "user@example-.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "exarnple-.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "example-.com",
+   "whatwg": "example-.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-hy-34",
+   "class": "idna",
+   "subclass": "hyphen",
+   "host": "ex--ample.com",
+   "note": "hyphens in positions 3-4 without xn: CheckHyphens fails; WHATWG allows",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://ex--ample.com/path?q=1",
+   "email": "user@ex--ample.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "ex--arnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "ex--ample.com",
+   "whatwg": "ex--ample.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-dev-sharp-s",
+   "class": "idna",
+   "subclass": "deviation",
+   "host": "fa\u00df.example.com",
+   "note": "LATIN SMALL SHARP S: non-transitional keeps it (xn--fa-hia); transitional maps to fass",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://fa\u00df.example.com/path?q=1",
+   "email": "user@fa\u00df.example.com",
+   "codepoints": [
+    "U+00DF"
+   ],
+   "uts46_status": [
+    "U+00DF:deviation"
+   ],
+   "skeleton": "fa\u00df.exarnple.corn",
+   "canonical": "xn--fa-hia.example.com",
+   "idna2008": "xn--fa-hia.example.com",
+   "idna2003": "fass.example.com",
+   "whatwg": "xn--fa-hia.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-dev-final-sigma",
+   "class": "idna",
+   "subclass": "deviation",
+   "host": "\u03b2\u03cc\u03bb\u03bf\u03c2.example.com",
+   "note": "GREEK SMALL FINAL SIGMA: non-transitional keeps it; transitional maps to sigma",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u03b2\u03cc\u03bb\u03bf\u03c2.example.com/path?q=1",
+   "email": "user@\u03b2\u03cc\u03bb\u03bf\u03c2.example.com",
+   "codepoints": [
+    "U+03B2",
+    "U+03CC",
+    "U+03BB",
+    "U+03BF",
+    "U+03C2"
+   ],
+   "uts46_status": [
+    "U+03B2:valid",
+    "U+03BB:valid",
+    "U+03BF:valid",
+    "U+03C2:deviation",
+    "U+03CC:valid"
+   ],
+   "skeleton": "\u00dfo\u0301\u03bbo\u03c2.exarnple.corn",
+   "canonical": "xn--nxasmm1c.example.com",
+   "idna2008": "xn--nxasmm1c.example.com",
+   "idna2003": "xn--nxasmq6b.example.com",
+   "whatwg": "xn--nxasmm1c.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-sym-snowman",
+   "class": "idna",
+   "subclass": "symbol",
+   "host": "\u2603.example.com",
+   "note": "SNOWMAN: valid in UTS 46 (NV8), disallowed by IDNA 2008",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u2603.example.com/path?q=1",
+   "email": "user@\u2603.example.com",
+   "codepoints": [
+    "U+2603"
+   ],
+   "uts46_status": [
+    "U+2603:valid"
+   ],
+   "skeleton": "\u2603.exarnple.corn",
+   "canonical": "xn--n3h.example.com",
+   "idna2008": null,
+   "idna2003": "xn--n3h.example.com",
+   "whatwg": "xn--n3h.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-sym-emoji",
+   "class": "idna",
+   "subclass": "symbol",
+   "host": "\ud83d\ude00.example.com",
+   "note": "GRINNING FACE emoji",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\ud83d\ude00.example.com/path?q=1",
+   "email": "user@\ud83d\ude00.example.com",
+   "codepoints": [
+    "U+1F600"
+   ],
+   "uts46_status": [
+    "U+1F600:valid"
+   ],
+   "skeleton": "\ud83d\ude00.exarnple.corn",
+   "canonical": "xn--e28h.example.com",
+   "idna2008": null,
+   "idna2003": "xn--e28h.example.com",
+   "whatwg": "xn--e28h.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-sym-heart",
+   "class": "idna",
+   "subclass": "symbol",
+   "host": "\u2764.example.com",
+   "note": "HEAVY BLACK HEART",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u2764.example.com/path?q=1",
+   "email": "user@\u2764.example.com",
+   "codepoints": [
+    "U+2764"
+   ],
+   "uts46_status": [
+    "U+2764:valid"
+   ],
+   "skeleton": "\u2764.exarnple.corn",
+   "canonical": "xn--qei.example.com",
+   "idna2008": null,
+   "idna2003": "xn--qei.example.com",
+   "whatwg": "xn--qei.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-bidi-rtl",
+   "class": "idna",
+   "subclass": "bidi",
+   "host": "\u05d0\u05d1.example.com",
+   "note": "Hebrew label: valid RTL label",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u05d0\u05d1.example.com/path?q=1",
+   "email": "user@\u05d0\u05d1.example.com",
+   "codepoints": [
+    "U+05D0",
+    "U+05D1"
+   ],
+   "uts46_status": [
+    "U+05D0:valid",
+    "U+05D1:valid"
+   ],
+   "skeleton": "\u05d0\u05d1.exarnple.corn",
+   "canonical": "xn--4dbc.example.com",
+   "idna2008": "xn--4dbc.example.com",
+   "idna2003": "xn--4dbc.example.com",
+   "whatwg": "xn--4dbc.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-bidi-rtl-digit-end",
+   "class": "idna",
+   "subclass": "bidi",
+   "host": "\u05d0\u05d11.example.com",
+   "note": "Hebrew label ending in a European digit: valid",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://\u05d0\u05d11.example.com/path?q=1",
+   "email": "user@\u05d0\u05d11.example.com",
+   "codepoints": [
+    "U+05D0",
+    "U+05D1"
+   ],
+   "uts46_status": [
+    "U+05D0:valid",
+    "U+05D1:valid"
+   ],
+   "skeleton": "\u05d0\u05d1l.exarnple.corn",
+   "canonical": "xn--1-zhcd.example.com",
+   "idna2008": "xn--1-zhcd.example.com",
+   "idna2003": null,
+   "whatwg": "xn--1-zhcd.example.com",
+   "expected": "accept"
+  },
+  {
+   "id": "idn-bidi-digit-first",
+   "class": "idna",
+   "subclass": "bidi",
+   "host": "1\u05d0.example.com",
+   "note": "digit before Hebrew: Bidi rule 1 fails",
+   "looks_like": null,
+   "surfaces": [
+    "host",
+    "url",
+    "email"
+   ],
+   "benign_difference": false,
+   "url": "https://1\u05d0.example.com/path?q=1",
+   "email": "user@1\u05d0.example.com",
+   "codepoints": [
+    "U+05D0"
+   ],
+   "uts46_status": [
+    "U+05D0:valid"
+   ],
+   "skeleton": "l\u05d0.exarnple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": null,
+   "whatwg": "xn--1-0hc.example.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-url-pct-host",
+   "class": "idna",
+   "subclass": "percent-encoded",
+   "host": "exa%6dple.com",
+   "note": "percent-encoded letter in host; WHATWG decodes to example.com",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url"
+   ],
+   "benign_difference": false,
+   "url": "https://exa%6dple.com/path?q=1",
+   "email": "user@exa%6dple.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "exa\u00b0/\u20806dple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "exa%6dple.com",
+   "whatwg": "example.com",
+   "expected": "reject"
+  },
+  {
+   "id": "idn-url-pct-zwsp",
+   "class": "idna",
+   "subclass": "percent-encoded",
+   "host": "exam%E2%80%8Bple.com",
+   "note": "percent-encoded U+200B in host; WHATWG decodes then applies UTS 46",
+   "looks_like": "example.com",
+   "surfaces": [
+    "host",
+    "url"
+   ],
+   "benign_difference": false,
+   "url": "https://exam%E2%80%8Bple.com/path?q=1",
+   "email": "user@exam%E2%80%8Bple.com",
+   "codepoints": [],
+   "uts46_status": [],
+   "skeleton": "exarn\u00b0/\u2080E2\u00b0/\u20808O\u00b0/\u20808Bple.corn",
+   "canonical": null,
+   "idna2008": null,
+   "idna2003": "exam%E2%80%8Bple.com",
+   "whatwg": "example.com",
+   "expected": "reject"
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+idna
+validators
+email-validator
+pydantic
+marshmallow
+wtforms
+voluptuous
+formencode
+django
+requests
+urllib3
+dnspython
+hyperlink
+yarl
+rfc3986
+furl
+tldextract
