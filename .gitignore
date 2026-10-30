@@ -32,3 +32,7 @@ paper/*.fls
 paper/*.fdb_latexmk
 
 .DS_Store
+
+# Hardening patches name the affected projects; held with the reports until
+# maintainers respond or 90 days pass. The directory README stays public.
+fixes/*/
