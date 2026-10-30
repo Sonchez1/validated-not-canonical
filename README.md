@@ -38,7 +38,7 @@ Seven ecosystems: Python, Node.js, Go, Java, Rust, Ruby, PHP.
 | `results/analyze.py` | computes the matrices, disagreement pairs and finding list from `results/raw/*.jsonl` |
 | `results/` | generated outputs (see "Publication schedule") |
 | `fixes/` | hardening patches per library (held until disclosure completes) |
-| `paper/` | LaTeX source of the paper |
+| `paper/` | bibliography and the script that derives the paper's tables from the results; the paper source itself is withheld until disclosure completes (see below) |
 
 ## Reproduce
 
