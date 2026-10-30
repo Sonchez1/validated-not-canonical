@@ -125,16 +125,18 @@ for k in order:
 out.append("\\bottomrule\n\\end{tabular}}\n")
 
 # ---------------------------------------------------------------- table: reference engines
-out.append("\\newcommand{\\tableReferences}{%\n\\begin{tabular}{@{}lrrrr@{}}\n\\toprule\nClass & ICU strict & idna (IDNA 2008) & IDNA 2003 codec & WHATWG \\\\\n\\midrule\n")
+out.append("\\newcommand{\\tableReferences}{%\n\\begin{tabular}{@{}lrrrr@{}}\n\\toprule\nClass & ICU strict & IDNA 2008 & IDNA 2003 & WHATWG \\\\\n\\midrule\n")
 for cls in ["invisible", "confusable", "idna", "control"]:
     cs = [c for c in corpus["cases"] if c["class"] == cls]
     out.append(f"{cls} ({len(cs)}) & {sum(c['canonical'] is not None for c in cs)} & {sum(c['idna2008'] is not None for c in cs)} & {sum(c['idna2003'] is not None for c in cs)} & {sum(c['whatwg'] is not None for c in cs)} \\\\\n")
 out.append("\\bottomrule\n\\end{tabular}}\n")
 n_ref_dis = sum(1 for c in corpus["cases"] if len({c["canonical"], c["idna2008"], c["idna2003"], c["whatwg"]}) > 1)
 out.append(num("nRefDisagree", n_ref_dis))
+out.append(num("nRefAgree", corpus["counts"]["cases"] - n_ref_dis))
 
 # ---------------------------------------------------------------- table: findings (library level)
-out.append("\\newcommand{\\tableFindings}{%\n\\begin{tabular}{@{}llllp{0.30\\linewidth}@{}}\n\\toprule\nEcosystem & Library & Version & Severity & Functions (buckets) \\\\\n\\midrule\n")
+ABBR = {"invisible": "I", "mapped-confusable": "M", "whitespace-control": "W", "undecodable-punycode": "P", "length": "L", "bidi": "B", "percent-encoded": "E"}
+out.append("\\newcommand{\\tableFindings}{%\n\\begin{tabular}{@{}llllp{0.56\\linewidth}@{}}\n\\toprule\nEcosystem & Library & Version & Severity & Functions (buckets: I invisible, M mapped confusable, W whitespace/control, P undecodable punycode, L length, B bidi, E percent-encoded) \\\\\n\\midrule\n")
 lib = collections.OrderedDict()
 rank = {"low-moderate": 0, "low": 1, "informational": 2}
 for g in findings:
@@ -144,8 +146,8 @@ for g in findings:
     e["funcs"].setdefault(g["function"].split("(")[0].split("  [")[0].strip(), set()).add(g["bucket"])
 for k, e in sorted(lib.items(), key=lambda kv: (min(rank[s] for s in kv[1]["sev"]), ECO_ORDER.index(kv[0][0]), kv[0][1])):
     top = min(e["sev"], key=lambda s: rank[s])
-    fns = "; ".join(f"{tex(fn)} ({', '.join(sorted(b))})" for fn, b in e["funcs"].items())
-    out.append(f"{ECO_NAME[k[0]]} & {tex(k[1])} & {tex(k[2][:14])} & {top} & \\small {fns} \\\\\n")
+    fns = "; ".join(f"{tex(fn)} ({''.join(sorted(ABBR[x] for x in b))})" for fn, b in e["funcs"].items())
+    out.append(f"{ECO_NAME[k[0]]} & {tex(k[1].replace('github.com/', ''))} & {tex(k[2][:14])} & {top} & {fns} \\\\\n")
 out.append("\\bottomrule\n\\end{tabular}}\n")
 
 # ---------------------------------------------------------------- acceptance matrix for validators on key subclasses (appendix)
@@ -171,7 +173,7 @@ for k in seen:
     fn = k[2].split("  [")[0]
     if len(fn) > 44:
         fn = fn[:41] + "..."
-    out.append(f"{ECO_NAME[k[0]]} & {tex(k[1][:22])} & \\texttt{{{tex(fn)}}} & " + " & ".join(cells) + " \\\\\n")
+    out.append(f"{ECO_NAME[k[0]]} & {tex(k[1].replace('github.com/', '')[:26])} & \\texttt{{{tex(fn)}}} & " + " & ".join(cells) + " \\\\\n")
 out.append("\\bottomrule\n\\end{tabular}}\n")
 
 with open(OUT, "w", encoding="utf-8") as fh:
