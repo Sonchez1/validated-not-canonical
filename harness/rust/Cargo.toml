@@ -1,0 +1,14 @@
+[package]
+name = "vnc-harness-rust"
+version = "1.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+url = "2"
+idna = "1"
+email_address = "0.2"
+validator = { version = "0.20", features = ["derive"] }
+psl = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

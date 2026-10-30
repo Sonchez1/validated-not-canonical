@@ -19,6 +19,7 @@ JSON strings with non-ASCII escaped (`\uXXXX`) so the files are safe to diff.
 | `output` | string or null | the host the function hands downstream, byte-for-byte. For a parser: the parsed host. For a boolean validator: the input host (it blesses the string as-is). For a normalising validator: the normalised host. For an e-mail function: the domain part of the accepted address. `null` when rejected. |
 | `output_kind` | string | `parsed`, `passthrough`, `normalized`, or `rejected` |
 | `error` | string or null | exception class and message (first 200 chars) when rejected |
+| `kind` | string | `validator` (an API an application calls to decide whether to accept input) or `downstream` (a parser, encoder, HTTP client, resolver step or public-suffix splitter that consumes the accepted string) |
 
 ## Self-check
 

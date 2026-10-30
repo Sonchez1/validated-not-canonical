@@ -1,0 +1,24 @@
+{
+  "name": "vnc-harness-node",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Node.js harness for the validated-not-canonical study",
+  "type": "module",
+  "scripts": {
+    "run": "node run.mjs"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "email-validator": "^2.0.4",
+    "joi": "^18.3.0",
+    "psl": "^1.15.0",
+    "punycode": "^2.3.1",
+    "tldts": "^7.4.19",
+    "tr46": "^6.0.0",
+    "validator": "^13.15.35",
+    "whatwg-url": "^16.0.1",
+    "yup": "^1.7.1",
+    "zod": "^4.6.7"
+  }
+}

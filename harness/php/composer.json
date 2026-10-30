@@ -1,0 +1,11 @@
+{
+  "name": "sonchez1/vnc-harness-php",
+  "description": "PHP harness for the validated-not-canonical study",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "egulias/email-validator": "^4",
+    "symfony/validator": "^7",
+    "league/uri": "^7"
+  }
+}

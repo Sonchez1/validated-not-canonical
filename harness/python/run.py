@@ -41,6 +41,15 @@ def domain_of(addr: str) -> str:
     return addr.rsplit("@", 1)[1] if "@" in addr else addr
 
 
+def raw_host(u: str) -> str:
+    """Host of a URL string without parsing or normalising it: the authority
+    up to the first / ? #, minus userinfo and port."""
+    import re
+    a = re.sub(r"^[A-Za-z][A-Za-z0-9+.-]*://", "", u).split("/")[0].split("?")[0].split("#")[0]
+    a = a.rsplit("@", 1)[-1]
+    return re.sub(r":\d*$", "", a)
+
+
 def version_of(dist: str) -> str:
     try:
         return md.version(dist)
@@ -218,7 +227,7 @@ try:
     import marshmallow
     from marshmallow import validate as mm_validate
 
-    _mv = marshmallow.__version__
+    _mv = version_of("marshmallow")
 
     @adapter("marshmallow", _mv, "marshmallow.validate.Email()(addr)", "email", "validator")
     @guarded
@@ -228,8 +237,7 @@ try:
     @adapter("marshmallow", _mv, "marshmallow.validate.URL()(url)", "url", "validator")
     @guarded
     def mm_url(value, case):
-        mm_validate.URL()(value)
-        return ok(case["host"], "passthrough")
+        return ok(raw_host(mm_validate.URL()(value)), "passthrough")
 except ImportError as e:
     SKIPPED.append(f"marshmallow: {e}")
 
@@ -253,7 +261,7 @@ try:
     def wt_url(value, case):
         f = _Field(value)
         wtv.URL()(None, f)
-        return ok(case["host"], "passthrough")
+        return ok(raw_host(f.data), "passthrough")
 
     @adapter("wtforms", _wv, "wtforms.validators.Email()(form, field)", "email", "validator")
     @guarded
@@ -282,14 +290,12 @@ try:
     @adapter("voluptuous", _vov, "voluptuous.Url()(url)", "url", "validator")
     @guarded
     def vo_url(value, case):
-        voluptuous.Url()(value)
-        return ok(case["host"], "passthrough")
+        return ok(raw_host(voluptuous.Url()(value)), "passthrough")
 
     @adapter("voluptuous", _vov, "voluptuous.FqdnUrl()(url)", "url", "validator")
     @guarded
     def vo_fqdn(value, case):
-        voluptuous.FqdnUrl()(value)
-        return ok(case["host"], "passthrough")
+        return ok(raw_host(voluptuous.FqdnUrl()(value)), "passthrough")
 
     @adapter("voluptuous", _vov, "voluptuous.Email()(addr)", "email", "validator")
     @guarded
@@ -315,8 +321,7 @@ try:
     @guarded
     def fe_url(value, case):
         out = fv.URL().to_python(value)
-        h = urlsplit(out).hostname
-        return ok(h if h is not None else out, "normalized")
+        return ok(raw_host(out), "normalized" if out != value else "passthrough")
 except ImportError as e:
     SKIPPED.append(f"formencode: {e}")
 
@@ -525,6 +530,7 @@ def run(out_path: str) -> None:
                     "library": a.library, "version": a.version, "function": a.function,
                     "surface": a.surface, "case_id": c["id"], "input": value,
                     "accepted": acc, "output": out, "output_kind": kind, "error": err,
+                    "kind": "validator" if a.kind == "validator" else "downstream",
                 }
                 fh.write(json.dumps(rec, ensure_ascii=True) + "\n")
                 n += 1
