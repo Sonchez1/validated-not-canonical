@@ -138,8 +138,34 @@ COLLAPSE_SUBCLASSES = {"ignored", "deviation", "disallowed", "mapped-to-ascii", 
                        "whitespace-control", "percent-encoded"}
 
 
+def to_unicode(alabel: str) -> Optional[str]:
+    inst = gen.icu_instance()
+    if inst:
+        uts46, icu = inst
+        info = icu.IDNAInfo()
+        try:
+            out = uts46.nameToUnicode(alabel, info)
+        except Exception:
+            return None
+        return None if info.errors() else str(out)
+    try:
+        import idna
+        return idna.decode(alabel)
+    except Exception:
+        return None
+
+
 def is_collapse_case(case: dict) -> bool:
-    return case["class"] in ("invisible",) or case["subclass"] in COLLAPSE_SUBCLASSES
+    """True when canonicalising the input drops or rewrites characters, so a
+    validator that passes the raw string through hands downstream something
+    that is only equivalent to a UTS 46-aware consumer. A valid IDN whose
+    canonical A-label decodes back to the input (e.g. ZWNJ in a valid
+    CONTEXTJ position) is not a collapse case."""
+    if case["class"] != "invisible" and case["subclass"] not in COLLAPSE_SUBCLASSES:
+        return False
+    if case["canonical"] is None:
+        return True
+    return to_unicode(case["canonical"]) != case["host"]
 
 
 # ---------------------------------------------------------------------------
@@ -215,7 +241,10 @@ def disagreements():
     for key, rows in by_eco_case.items():
         verdicts = collections.defaultdict(list)
         for r in rows:
-            v = "reject" if r["_outcome"] == "reject" else f"accept:{r['_eff']}"
+            if r["_outcome"] == "reject":
+                v = "reject"
+            else:
+                v = f"accept {json.dumps(r['output'], ensure_ascii=True)} (-> {r['_eff']})"
             verdicts[v].append(comp_name(r))
         if len(verdicts) > 1:
             out[key] = verdicts
@@ -250,6 +279,17 @@ SEVERITY_OVERRIDE = {
     ("node", "psl"): ("informational", "psl.isValid checks that the trailing labels match a Public Suffix List rule; it is not a syntax validator"),
     ("ruby", "public_suffix"): ("informational", "PublicSuffix.valid? checks that the trailing labels match a Public Suffix List rule; it is not a syntax validator"),
 }
+
+
+# Functions recorded in the matrix but excluded from the finding list because
+# their own documentation says they are not standalone validators.
+NOT_STANDALONE = {
+    ("php", "egulias/email-validator", "SpoofCheckValidation"): "documented as an additional check to combine with RFCValidation via MultipleValidationWithAnd; it performs no syntax validation on its own",
+}
+
+
+def not_standalone(row: dict) -> bool:
+    return any(row["ecosystem"] == e and row["library"] == l and f in row["function"] for (e, l, f) in NOT_STANDALONE)
 
 
 def bucket_for(case: dict):
@@ -288,6 +328,10 @@ def compute_findings():
             continue
         if o == "accept-equivalent" and (not is_collapse_case(c) or r["output"] != c["host"]):
             continue  # a valid IDN passed through, or the validator normalised it: not a finding
+        if o == "accept-invalid" and r["output"] != c["host"] and r["_eff"] != "INVALID":
+            continue  # the validator repaired an invalid input into a valid host (e.g. trimmed whitespace)
+        if not_standalone(r):
+            continue
         # downstream disagreement in the same ecosystem
         downstream = [d for d in by_eco_case[(r["ecosystem"], r["case_id"])] if d["_kind"] == "downstream"]
         disagree = []
@@ -327,8 +371,8 @@ def compute_findings():
 def write_disagreements(dis):
     lines = ["# Disagreement pairs", "",
              "For each ecosystem and corpus case where at least two components reached different verdicts. "
-             "`accept:<host>` is the effective host (strict UTS 46 ToASCII of the component's output); `accept:INVALID` means the "
-             "component accepted a string that has no valid canonical form.", ""]
+             "Verdicts are grouped by the exact string each component hands downstream; the arrow gives its effective host "
+             "(strict UTS 46 ToASCII of that string), or INVALID when the string has no valid canonical form.", ""]
     by_eco = collections.defaultdict(list)
     for (eco, cid), v in dis.items():
         by_eco[eco].append((cid, v))
@@ -386,7 +430,7 @@ def write_summary(findings, dis):
         "findings_by_severity": dict(sev),
         "findings_by_bucket": dict(bucket),
         "findings_by_ecosystem": dict(per_eco),
-        "disagreement_cases_by_ecosystem": dict(collections.Counter(e for e, _ in dis)),
+        "disagreement_cases_by_ecosystem": dict(collections.Counter(e for e, cid in dis if not CASES[cid]["benign_difference"])),
         "outcomes_by_class": {f"{c}/{o}": n for (c, o), n in sorted(outcome_counts.items())},
     }
     with open(os.path.join(HERE, "summary.json"), "w", encoding="utf-8") as fh:
